@@ -1,0 +1,10 @@
+*.aux
+*.bbl
+DMTN-216.blg
+DMTN-216.fdb_latexmk
+DMTN-216.fls
+DMTN-216.log
+DMTN-216.pdf
+DMTN-216.xdv
+authors.tex
+meta.tex
