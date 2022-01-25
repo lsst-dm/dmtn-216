@@ -1,9 +1,53 @@
 \section{Problem Definition}
+
+There are at least two approaches..
+\\- traditional r/b classification
+\\- modern (Transinet-style)\\
+
+(see figure~\ref{fig:diagram})
+each with its own pros and cons..
+
+The two will be implemented and tested in parallel. Therefore we shall try to bring the two implementations close to eachother -- ideally unify.
+
+
+\subsection{Basic Real/Bogus Classification}
+
+\begin{itemize}
+  \item input: cutouts from diff image with the potential transient at the center
+  \item output: reliability score for the potential transient
+\end{itemize}
+
+Features:
+\begin{itemize}
+  \item can handle single object per cutout -- when there are multiple true transients, the behaviour is ..?
+  \item the learning-based module does not have the chance to 
+\end{itemize}
+
+\paragraph{The score}
+.. PSF-ness ..
+
+\subsection{TransiNet: End-to-End Simultaneous Localization and Classification}
+
+\begin{itemize}
+  \item input: single calexp
+  \item output: ``score image'': scores are assigned per-pixel
+\end{itemize}
+
+
+\paragraph{The score}
+There are bogus detections, variables, ``appearing transients''
+\begin{equation}
+  s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
+\end{equation}
+
+
 \begin{figure}
   \centering
   \includegraphics[width=1\textwidth]{material/diagram}
   \caption{Coarse illustration of information flow through the Alert Production (AP) pipeline. Paths in blue and green illustrate the ``traditional'' and ``modern'' approaches respectively.}
+  \label{fig:diagram}
 \end{figure}
+
 
 % \section{Notes from the template}
 
