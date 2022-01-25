@@ -43,4 +43,4 @@ jobs:
           LTD_PASSWORD: ${{ secrets.LTD_PASSWORD }}
           LTD_USERNAME: ${{ secrets.LTD_USERNAME }}
         run: |
-          lander --upload --pdf DMTN-216.pdf --ltd-product dmtn-216 --title DMTN-216
+          lander --upload --pdf DMTN-216.pdf --ltd-product dmtn-216 --title "Deep Learning Approach(es) for LSST Alert Production"
