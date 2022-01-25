@@ -26,6 +26,9 @@ Features:
 \paragraph{The score}
 .. PSF-ness ..
 
+\subsection{Modified Real/Bogus Classifier}
+
+
 \subsection{TransiNet: End-to-End Simultaneous Localization and Classification}
 
 \begin{itemize}
@@ -46,6 +49,20 @@ There are bogus detections, variables, ``appearing transients''
   \includegraphics[width=1\textwidth]{material/diagram}
   \caption{Coarse illustration of information flow through the Alert Production (AP) pipeline. Paths in blue and green illustrate the ``traditional'' and ``modern'' approaches respectively.}
   \label{fig:diagram}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{material/rb-classifier}
+  \caption{Classical Real/bogus classifier}
+  \label{fig:rbdiagram}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=1\textwidth]{material/rb-classifier-mod}
+  \caption{Classical Real/bogus classifier setup can be modified such that corresponding cutouts from template and science images are fed into the network too.}
+  \label{fig:rbdiagram}
 \end{figure}
 
 
