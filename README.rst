@@ -1,7 +1,7 @@
 .. image:: https://img.shields.io/badge/dmtn--216-lsst.io-brightgreen.svg
    :target: https://dmtn-216.lsst.io
-.. image:: https://travis-ci.com/lsst-dm/dmtn-216.svg
-   :target: https://travis-ci.com/lsst-dm/dmtn-216
+.. image:: https://github.com/lsst-dm/dmtn-216/workflows/CI/badge.svg
+   :target: https://github.com/lsst-dm/dmtn-216/actions/
 
 ####################################################
 Deep Learning Approach(es) for LSST Alert Production
@@ -37,7 +37,7 @@ Clean built files::
 Updating acronyms
 -----------------
 
-A table of the technote's acronyms and their definitions are maintained in the `acronyms.tex` file, which is committed as part of this repository.
+A table of the technote's acronyms and their definitions are maintained in the ``acronyms.tex`` file, which is committed as part of this repository.
 To update the acronyms table in ``acronyms.tex``::
 
     make acronyms.tex
