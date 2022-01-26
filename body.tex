@@ -15,16 +15,26 @@ The two will be implemented and tested in parallel. Therefore we shall try to br
 \begin{itemize}
   \item input: cutouts from diff image with the potential transient at the center
   \item output: reliability score for the potential transient
+  \item contrary to the title, it is technically not a classifer, but a regressor -- the output is not categorical.
 \end{itemize}
 
 Features:
 \begin{itemize}
   \item can handle single object per cutout -- when there are multiple true transients, the behaviour is ..?
-  \item the learning-based module does not have the chance to 
 \end{itemize}
 
 \paragraph{The score}
-.. PSF-ness ..
+It is foreseeable that the network will eventually learn a concept close to ``PSF-ness'', is it will be processing only spatial data.
+% \begin{equation}
+%   \[
+%     f(x)=
+%     \begin{cases}
+%       2x^{2018}+9&x<2018\\
+%       3x+2018&x\geq 2018.
+%     \end{cases}
+%   \]
+% \end{equation}
+
 
 \subsection{Modified Real/Bogus Classifier}
 
