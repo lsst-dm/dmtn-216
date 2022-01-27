@@ -4,13 +4,28 @@ There are at least two approaches..
 \\- traditional r/b classification
 \\- modern (Transinet-style)\\
 
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{material/diagram}
+  \caption{Coarse illustration of information flow through the Alert Production (AP) pipeline. Paths in blue and green illustrate the ``traditional'' and ``modern'' approaches respectively.}
+  \label{fig:diagram}
+\end{figure}
+
+
 (see figure~\ref{fig:diagram})
 each with its own pros and cons..
 
 The two will be implemented and tested in parallel. Therefore we shall try to bring the two implementations close to eachother -- ideally unify.
 
 
-\subsection{Basic Real/Bogus Classification}
+\subsection{Basic Real/Bogus Classifier}
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{material/rb-classifier}
+  \caption{Classical Real/bogus classifier}
+  \label{fig:rbdiagram}
+\end{figure}
 
 \begin{itemize}
   \item input: cutouts from diff image with the potential transient at the center
@@ -36,7 +51,13 @@ It is foreseeable that the network will eventually learn a concept close to ``PS
 % \end{equation}
 
 
-\subsection{Modified Real/Bogus Classifier}
+\subsection{3D Real/Bogus Classifier}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{material/rb-classifier-mod}
+  \caption{Classical Real/bogus classifier setup can be modified such that corresponding cutouts from template and science images are fed into the network too.}
+  \label{fig:rbdiagram}
+\end{figure}
 
 
 \subsection{TransiNet: End-to-End Simultaneous Localization and Classification}
@@ -54,26 +75,6 @@ There are bogus detections, variables, ``appearing transients''
 \end{equation}
 
 
-\begin{figure}
-  \centering
-  \includegraphics[width=1\textwidth]{material/diagram}
-  \caption{Coarse illustration of information flow through the Alert Production (AP) pipeline. Paths in blue and green illustrate the ``traditional'' and ``modern'' approaches respectively.}
-  \label{fig:diagram}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=1\textwidth]{material/rb-classifier}
-  \caption{Classical Real/bogus classifier}
-  \label{fig:rbdiagram}
-\end{figure}
-
-\begin{figure}
-  \centering
-  \includegraphics[width=1\textwidth]{material/rb-classifier-mod}
-  \caption{Classical Real/bogus classifier setup can be modified such that corresponding cutouts from template and science images are fed into the network too.}
-  \label{fig:rbdiagram}
-\end{figure}
 
 
 % \section{Notes from the template}
