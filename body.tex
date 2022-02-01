@@ -61,10 +61,18 @@ Input-output definition of the problem:
 
 Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be intepretted as a probability.
 
-Features:
+\subsubsection{Drawbacks}
 \begin{itemize}
-  \item can handle single object per cutout -- when there are multiple true transients, the behaviour is ..?
+\item has no access to the temporal~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!} behaviour of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate.
+\item all the ``misses'' of upstream modules are inherited and are unreconverable.
+\item can handle single object per cutout -- when there are multiple true transients, it \emph{has to} ignore the others.
 \end{itemize}
+
+\subsubsection{Benefits}
+\label{sec:rb_benefits}
+
+Although as stated before, this is just a sub-optimal learning-based approach to this problem, it still has the advantage of \emph{interpretability}; although the generated output might be too contamined with false alarams or (/and at the same time) missed true transients, 
+
 
 \paragraph{The score}
 It is foreseeable that the network will eventually learn a concept close to ``PSF-ness'', is it will be processing only spatial data.
