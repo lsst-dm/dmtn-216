@@ -1,7 +1,29 @@
 \section{Problem Definition}
 
-There are at least two approaches..
-\\- traditional r/b classification
+Loosely speaking, the high-level objective in transient-detection is to locate intrinsicly(?)-varying objects in each recently shot image of the sky.
+More formally and in the concept of this project, this objective can be defined as finding the mapping
+\begin{equation}
+  \label{eq:def1}
+  (I_t,I_s) \longrightarrow S_t 
+\end{equation}
+where $I_s$ is the recently captured image, namely the \emph{science image}. $I_t$ is the \emph{template} or \emph{reference} iamge, and $S_t$ is the set of \emph{true transients} to be detected.
+
+However, this problem has traditionally been broken down into two subprolems, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{smart-thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
+\begin{equation}
+  \label{eq:def2}
+  (I_t,I_s) \xrightarrow{subtract} I_d \xrightarrow{threshold} S_t 
+\end{equation}
+
+The \emph{thresholding} step has traditionally been implemented as a simple $5\sigma$-thresholding, but other auxilliary approaches may wrap this stage to make it \emph{smart}er.
+
+\section{Learning-based Approaches}
+\label{sec:learning}
+The above process is prone to false positives (contamination) and false negatives (misses). Learning-based approaches come into play to mitigate this.
+
+In the context built in the previous section, learning-based approaches can be put into two broad categories:
+: classification-only vs. end-to-end detection \footnote{The term 'detection' in the field of computer vision can be translated to localization+classification in the astrophysics' terminology}
+
+- traditional r/b classification
 \\- modern (Transinet-style)\\
 
 \begin{figure}[h]
