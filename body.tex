@@ -53,11 +53,13 @@ From a data-scientific perspective, the latter is the preferred and more optimal
   \label{fig:rbdiagram}
 \end{figure}
 
+Input-output definition of the problem:
 \begin{itemize}
-  \item input: cutouts from diff image with the potential transient at the center
+  \item input: cutouts from diff image ($I_d$) with the potential transient at the center
   \item output: reliability score for the potential transient
-  \item contrary to the title, it is technically not a classifer, but a regressor -- the output is not categorical.
 \end{itemize}
+
+Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be intepretted as a probability.
 
 Features:
 \begin{itemize}
