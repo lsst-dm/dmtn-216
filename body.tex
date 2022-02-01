@@ -8,13 +8,23 @@ More formally and in the concept of this project, this objective can be defined 
 \end{equation}
 where $I_s$ is the recently captured image, namely the \emph{science image}. $I_t$ is the \emph{template} or \emph{reference} iamge, and $S_t$ is the set of \emph{true transients} to be detected.
 
+
 However, this problem has traditionally been broken down into two subprolems, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{smart-thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
 \begin{equation}
   \label{eq:def2}
   (I_t,I_s) \xrightarrow{diff} I_d \xrightarrow{threshold} S_t 
 \end{equation}
 
-The \emph{thresholding} step has traditionally been implemented as a simple $5\sigma$-thresholding, but other auxilliary approaches may wrap this stage to make it \emph{smart}er.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{material/diagram}
+  \caption{Coarse illustration of information flow through the Alert Production (AP) pipeline. Paths in blue and green illustrate the ``traditional'' and ``modern'' approaches respectively.}
+  \label{fig:diagram}
+\end{figure}
+
+
+The \emph{thresholding} step has traditionally been implemented as a simple $5\sigma$-thresholding, but other auxilliary approaches may wrap this stage to make it \emph{smart}er -- figure~\ref{fig:diagram})
+
 
 \section{Learning-based Approaches}
 \label{sec:learning}
@@ -28,21 +38,10 @@ In the context built in the previous section, a learning based approach can be i
 
 \footnote{The term 'detection' in the field of computer vision can be translated to localization+classification in the astrophysics' terminology}
 
-- 
-\\- modern (Transinet-style)\\
 
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.8\textwidth]{material/diagram}
-  \caption{Coarse illustration of information flow through the Alert Production (AP) pipeline. Paths in blue and green illustrate the ``traditional'' and ``modern'' approaches respectively.}
-  \label{fig:diagram}
-\end{figure}
-
-
-(see figure~\ref{fig:diagram})
 each with its own pros and cons..
 
-The two will be implemented and tested in parallel. Therefore we shall try to bring the two implementations close to eachother -- ideally unify.
+From a data-scientific perspective, the latter is the preferred and more optimal approach. Pros and cons of the two approaches and details of this preference come in the following sections. However, the current decision is to implement and test the two in parallel. Therefore we shall attempt to bring the two implementations close to eachother -- ideally unified.
 
 
 \subsection{Basic Real/Bogus Classifier}
