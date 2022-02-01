@@ -18,12 +18,17 @@ The \emph{thresholding} step has traditionally been implemented as a simple $5\s
 
 \section{Learning-based Approaches}
 \label{sec:learning}
-The above process is prone to false positives (contamination) and false negatives (misses). Learning-based approaches come into play to mitigate this.
+The above process is prone to false positives (contamination) and false negatives (misses). Learning-based approaches come into play to mitigate this...
 
-In the context built in the previous section, learning-based approaches can be put into two broad categories:
-: classification-only vs. end-to-end detection \footnote{The term 'detection' in the field of computer vision can be translated to localization+classification in the astrophysics' terminology}
+In the context built in the previous section, a learning based approach can be implemented in two broad ways:
+\begin{itemize}
+\item starting off $I_d$ -- a.k.a traditional real/bogus classification.
+\item starting off $(I_t,I_s)$ -- a.k.a end-to-end, TransiNet-style.
+\end{itemize}
 
-- traditional r/b classification
+\footnote{The term 'detection' in the field of computer vision can be translated to localization+classification in the astrophysics' terminology}
+
+- 
 \\- modern (Transinet-style)\\
 
 \begin{figure}[h]
