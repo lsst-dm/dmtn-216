@@ -64,36 +64,24 @@ Although the output of a classifier is categorical (i.e. a class label), we will
 \subsubsection{Drawbacks}
 \begin{itemize}
 \item has no access to the temporal~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!} behaviour of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate.
-\item all the ``misses'' of upstream modules are inherited and are unreconverable.
-\item can handle single object per cutout -- when there are multiple true transients, it \emph{has to} ignore the others.
+\item any ``miss'' (false negative) in the upstream modules is inherited and irrecoverable.
+\item can only handle single object per cutout -- when there are multiple true transients, it \emph{has to} ignore the others.
 \end{itemize}
+
+The first two drawbacks are a result of having separated the temporal processing (i.e. image differencing) from the final classification, whereas the last one has to do with how the problem and solution are defined based on cutouts.
+
+\paragraph{The case of ambiguous negatives}
+As of now it is not quite clear what a ``negative'' is for training; in the broadest implementation it can be cutout that is not positive. But since the inputs to this module are the oututs of imdiff, one could only use ``bogus candidates'' as negatives, which is closer to what happens in practice, and may give better results.
+
 
 \subsubsection{Benefits}
 \label{sec:rb_benefits}
 
-Although as stated before, this is just a sub-optimal learning-based approach to this problem, it still has the advantage of \emph{interpretability}; although the generated output might be too contamined with false alarams or (/and at the same time) missed true transients, 
+Eventhough this is just a sub-optimal learning-based approach to this problem, it still has the advantage of \emph{interpretability}; although the generated output might be too contamined with false alarms and (at the same time) missed true transients, the process is fully transparent to the downstream users of the alerts and they may come up with their own post-processing blocks per need.
 
 
-\paragraph{The score}
-It is foreseeable that the network will eventually learn a concept close to ``PSF-ness'', is it will be processing only spatial data.
-% \begin{equation}
-%   \[
-%     f(x)=
-%     \begin{cases}
-%       2x^{2018}+9&x<2018\\
-%       3x+2018&x\geq 2018.
-%     \end{cases}
-%   \]
-% \end{equation}
-
-
-\subsection{3D Real/Bogus Classifier}
-\begin{figure}[h]
-  \centering
-  \includegraphics[width=.8\textwidth]{material/rb-classifier-mod}
-  \caption{Classical Real/bogus classifier setup can be modified such that corresponding cutouts from template and science images are fed into the network too.}
-  \label{fig:rbdiagram}
-\end{figure}
+\subsubsection{What will be learned?}
+Since the temporal behaviour of the candidates fed to this module is assumed, it is foreseeable that the neural network will eventually learn a concept close to ``PSF-ness'', true to its title; real/bogus classification.
 
 
 \subsection{TransiNet: End-to-End Simultaneous Localization and Classification}
@@ -110,6 +98,14 @@ There are bogus detections, variables, ``appearing transients''
   s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
 \end{equation}
 
+
+\subsection{3D Real/Bogus Classifier}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{material/rb-classifier-mod}
+  \caption{Classical Real/bogus classifier setup can be modified such that corresponding cutouts from template and science images are fed into the network too.}
+  \label{fig:rbdiagram}
+\end{figure}
 
 
 
