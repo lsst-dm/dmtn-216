@@ -71,8 +71,8 @@ Although the output of a classifier is categorical (i.e. a class label), we will
 
 The first two drawbacks are a result of having separated the temporal processing (i.e. image differencing) from the final classification, whereas the last one has to do with how the problem and solution are defined based on cutouts.
 
-\paragraph{The case of ambiguous negatives}
-As of now it is not quite clear what a ``negative'' is for training; in the broadest implementation it can be cutout that is not positive. But since the inputs to this module are the outputs of imdiff, one could only use ``bogus candidates'' as negatives, which is closer to what happens in practice, and may give better results.
+% \paragraph{The case of ambiguous negatives}
+% As of now it is not quite clear what a ``negative'' is for training; in the broadest implementation it can be cutout that is not positive. But since the inputs to this module are the outputs of imdiff, one could only use ``bogus candidates'' as negatives, which is closer to what happens in practice, and may give better results.
 
 
 \subsubsection{Benefits}
