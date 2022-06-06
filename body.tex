@@ -10,7 +10,7 @@ More formally and in the concept of this project, this objective can be defined 
 where $I_s$ is the recently captured image, namely the \emph{science image}. $I_t$ is the \emph{template} or \emph{reference} iamge, and $S_t$ is the set of \emph{true transients} to be detected.
 
 
-However, this problem has traditionally been broken down into two subprolems, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{smart-thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
+However, this problem has traditionally been broken down into two broad subprolems, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{smart-thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
 \begin{equation}
   \label{eq:def2}
   (I_t,I_s) \xrightarrow{diff} I_d \xrightarrow{threshold} S_t 
