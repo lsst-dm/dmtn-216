@@ -1,16 +1,16 @@
 \section{Problem Definition}
 \label{sec:definition}
 
-Loosely speaking, the high-level objective in transient-detection is to locate intrinsicly(?)-varying objects in each recently shot image of the sky.
+Loosely speaking, the high-level objective in transient-detection is to locate intrinsically(?)-varying objects in each recently shot image of the sky.
 More formally and in the concept of this project, this objective can be defined as finding the mapping
 \begin{equation}
   \label{eq:def1}
   (I_t,I_s) \longrightarrow S_t 
 \end{equation}
-where $I_s$ is the recently captured image, namely the \emph{science image}. $I_t$ is the \emph{template} or \emph{reference} iamge, and $S_t$ is the set of \emph{true transients} to be detected.
+where $I_s$ is the recently captured image, namely the \emph{science image}. $I_t$ is the \emph{template} or \emph{reference} image, and $S_t$ is the set of \emph{true transients} to be detected.
 
 
-However, this problem has traditionally been broken down into two subprolems, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{smart-thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
+However, this problem has traditionally been broken down into two broad sub-problems, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{smart-thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
 \begin{equation}
   \label{eq:def2}
   (I_t,I_s) \xrightarrow{diff} I_d \xrightarrow{threshold} S_t 
@@ -24,7 +24,7 @@ However, this problem has traditionally been broken down into two subprolems, na
 \end{figure}
 
 
-The \emph{thresholding} step has traditionally been implemented as a simple $5\sigma$-thresholding, but other auxilliary approaches may wrap this stage to make it \emph{smart}er -- figure~\ref{fig:diagram}
+The \emph{thresholding} step has traditionally been implemented as a simple $5\sigma$-thresholding, but other auxiliary approaches, such as pre-convolution with the PSF, may wrap around this stage to make it smart -- figure~\ref{fig:diagram}
 
 
 \section{Learning-based Approaches}
@@ -40,7 +40,7 @@ In the context built in the previous section, a learning based approach can be i
 \footnote{The term 'detection' in the field of computer vision can be translated to localization+classification in the astrophysics' terminology}
 
 
-Pros and cons of the two approaches come in the following sections. However, the current decision is to implement and test the two in parallel. Therefore we shall attempt to bring the two implementations close to eachother -- ideally unified.
+Each of the approaches has its own cons and pros, and methods based on both will be implemented for LSST. In this tech-note we focus on details of the former, the real/bogus classifier, and the end-to-end TransiNet will be covered in a future note.
 
 
 \subsection{Basic Real/Bogus Classifier}
@@ -59,11 +59,11 @@ Input-output definition of the problem:
   \item output: reliability score for the potential transient
 \end{itemize}
 
-Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be intepretted as a probability.
+Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability.
 
 \subsubsection{Drawbacks}
 \begin{itemize}
-\item has no access to the temporal~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!} behaviour of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate.
+\item has no access to the temporal~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!} behavior of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate.
 \item any ``miss'' (false negative) in the upstream modules is inherited and irrecoverable.
 \item can only handle single object per cutout -- when there are multiple true transients, it \emph{has to} ignore the others.
 \end{itemize}
@@ -77,11 +77,11 @@ The first two drawbacks are a result of having separated the temporal processing
 \subsubsection{Benefits}
 \label{sec:rb_benefits}
 
-Although as discussed this is just a sub-optimal learning-based approach to this problem, it still has the advantage of \emph{interpretability}; the generated output might be too contamined with false alarms and (at the same time) missed true transients, but the process is fully transparent to the downstream users of the alerts and they have the possibility to develop their own post-processing blocks per need.
+Although as discussed this is just a sub-optimal learning-based approach to this problem, it still has the advantage of \emph{interpretability}; the generated output might be too contaminated with false alarms and (at the same time) missed true transients, but the process is fully transparent to the downstream users of the alerts and they have the possibility to develop their own post-processing blocks per need.
 
 
 \subsubsection{What will be learned?}
-Since the temporal behaviour of the candidates fed to this module is assumed, it is foreseeable that the neural network will eventually learn a concept close to ``PSF-ness'', true to its title; real/bogus classification.
+Since the temporal behavior of the candidates fed to this module is assumed, it is foreseeable that the neural network will eventually learn a concept close to ``PSF-ness'', true to its title; real/bogus classification.
 
 \subsubsection{Modified 3D Real/Bogus Classifier}
 In this implementation the classifier has access to the template, science image pairs along with the diff image. This allows the network to make use of the temporal behavior of the source too.
