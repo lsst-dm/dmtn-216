@@ -63,6 +63,16 @@ Although the output of a classifier is categorical (i.e. a class label), we will
 
 \subsection{The score}
 As the task definition embraces a recognition according to spatial \emph{and} temporal features simultaneously, the score needs to be defined carefully to capture both aspects.
+More specifically, we need to define the term ``real'' more precisely: a non-astrophysical detection, such as an artifact, is obviously not ``real''. But how about a non-varying astrophysical source?
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=.8\textwidth]{material/score-space}
+  \caption{The 2-dimensional realness space}
+  \label{fig:score-space}
+\end{figure}
+
+As illustrated in figure~\ref{fig:score-space}, the real-ness space is composed of (at least) two dimensions, which we name ``transient-ness'' and ``object-ness''.
 
 There are multiple available options:
 \begin{itemize}
