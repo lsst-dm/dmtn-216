@@ -59,7 +59,23 @@ Input-output definition of the problem:
   \item output: reliability score for the potential transient
 \end{itemize}
 
-Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability.
+Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability or score.
+
+\subsection{The score}
+As the task definition embraces a recognition according to spatial \emph{and} temporal features simultaneously, the score needs to be defined carefully to capture both aspects.
+
+There are multiple available options:
+\begin{itemize}
+\item simple binary classification -- the resulting score may not be quite informative
+\item regression -- more difficult to define
+\item multi-class classification -- difficult data annotation
+\end{itemize}
+
+If we go with regression... there are bogus detections, variables, ``appearing transients''
+\begin{equation}
+  s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
+\end{equation}
+
 
 \subsection{Drawbacks}
 \begin{itemize}
@@ -104,21 +120,6 @@ Note however that still the difference image has a key role in the process, as t
 
 Based on TransiNet~\cite{transinet}. Does full detection (localization + classification) simultaneously -- along with any necessary implicit steps.
 Since the temporal and spatial behaviors are considered at the same time, the definition of the task of this module would be to find all the time-variable real astronomical sources -- corresponding to the high-level definition of the problem in \ref{sec:definition}.
-
-\subsection{The score}
-As the task definition embraces a recognition according to spatial \emph{and} temporal features simultaneously, the score needs to be defined carefully to capture both aspects.
-
-There are multiple available options:
-\begin{itemize}
-\item simple binary classification -- the resulting score may not be quite informative
-\item regression -- more difficult to define
-\item multi-class classification -- difficult data annotation
-\end{itemize}
-
-If we go with regression... there are bogus detections, variables, ``appearing transients''
-\begin{equation}
-  s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
-\end{equation}
 
 
 
