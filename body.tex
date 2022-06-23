@@ -80,6 +80,7 @@ As a data-driven approach, which is being implemented as a supervised task at it
 We label any suggested candidate as a \emph{positive}, if and only if it matches one of the astrophysical transients in the truth catalog, \emph{spatially} and with a high enough precision. Any other candidate is labeled as a \emph{negative}.
 \end{tcolorbox}
 
+This way, in the training phase we inject our prior knowledge about the ``real-ness'' of each object into the learning process, regardless of the difficulty of the detection of each object and without adding artificial Aleatoric uncertainty to the system. Later during the test phase (i.e. normal working mode of the pipeline), we use the pseudo-probabilities appearing before thresholding at the final layer of the network as a proxy of the score, which capture the Epistemic uncertainty of the model too.
 
 
 % There are multiple available options:
