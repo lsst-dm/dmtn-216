@@ -75,17 +75,24 @@ More specifically, we need to define the term ``real'' more precisely: a non-ast
 
 As illustrated in figure~\ref{fig:score-space}, the real-ness space is composed of (at least) two dimensions, which we name ``transient-ness'' and ``object-ness''.
 
-There are multiple available options:
-\begin{itemize}
-\item simple binary classification -- the resulting score may not be quite informative
-\item regression -- more difficult to define
-\item multi-class classification -- difficult data annotation
-\end{itemize}
+As a data-driven approach, which is being implemented as a supervised task at its core, we do not excert the definition of the problem into the method itself, but the ``truth labels'' used for training the classifier.
+\begin{tcolorbox}
+We label any suggested candidate as a \emph{positive}, if and only if it matches one of the astrophysical transients in the truth catalog, \emph{spatially} and with a high enough precision. Any other candidate is labeled as a \emph{negative}.
+\end{tcolorbox}
 
-If we go with regression... there are bogus detections, variables, ``appearing transients''
-\begin{equation}
-  s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
-\end{equation}
+
+
+% There are multiple available options:
+% \begin{itemize}
+% \item simple binary classification -- the resulting score may not be quite informative
+% \item regression -- more difficult to define
+% \item multi-class classification -- difficult data annotation
+% \end{itemize}
+
+% If we go with regression... there are bogus detections, variables, ``appearing transients''
+% \begin{equation}
+%   s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
+% \end{equation}
 
 
 \subsection{Drawbacks}
