@@ -109,9 +109,9 @@ Although as discussed this is just a sub-optimal learning-based approach to this
 \subsection{What will be learned?}
 Since the temporal behavior of the candidates fed to this module is assumed, it is foreseeable that the neural network will eventually learn a concept close to ``PSF-ness'', true to its title; real/bogus classification.
 
-\subsection{Modified 3D Real/Bogus Classifier}
-In this implementation the classifier has access to the template, science image pairs along with the diff image. This allows the network to make use of the temporal behavior of the source too.
-Note however that still the difference image has a key role in the process, as the images are cropped around the sources detected in the difference image.
+\section{Modified 3D Real/Bogus Classifier}
+In this implementation, we try to feed the network with a glimpse of the temporal behaviour of the candidate, by passing the template and science image pairs along with the diff image. This allows the network to make use of the temporal behavior of the source too.
+Note however that still the difference image plays a key role in the process, as the images are cropped around the sources detected in the difference image. This means that the modification only aims for clealiness of the detections, by passing more information about the existing candidates (diaSources), but cannot affect the completeness of detections, by definition.
 
 \subsection{End-to-End Simultaneous Localization and Classification (~TransiNet)}
 
