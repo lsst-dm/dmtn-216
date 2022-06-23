@@ -1,16 +1,17 @@
 \section{Problem Definition -- Big Picture}
 \label{sec:definition}
 
-Loosely speaking, the high-level objective in transient-detection is to locate intrinsically(?)-varying objects in each recently shot image of the sky.
+Loosely speaking, the high-level objective in transient-detection is to locate intrinsically-varying objects in each recent image of the sky.
 More formally and in the concept of this project, this objective can be defined as finding the mapping
 \begin{equation}
   \label{eq:def1}
   (I_t,I_s) \longrightarrow S_t 
 \end{equation}
-where $I_s$ is the recently captured image, namely the \emph{science image}. $I_t$ is the \emph{template} or \emph{reference} image, and $S_t$ is the set of \emph{true transients} to be detected.
+where $I_s$ is the recently captured image, namely the \emph{science image}. $I_t$ is the \emph{template} or \emph{reference} image, and $S_t$ is the set of \emph{true transients} to be detected \footnote{The term 'detection' in the field of computer vision can be translated to localization+classification in the astrophysics' terminology}.
 
 
-However, this problem has traditionally been broken down into two broad sub-problems, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{smart-thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
+
+However, this problem has traditionally been broken down into two broad sub-problems \citep{alard1998method,zackay2017coaad}, namely, \emph{image differencing}\footnote{or interchangeably, \emph{difference imaging}} and \emph{thresholding}; the latter being the process of finding a threshold above which all the pixels in the diff image, $I_d$, will be seen as candidate transient sources:
 \begin{equation}
   \label{eq:def2}
   (I_t,I_s) \xrightarrow{diff} I_d \xrightarrow{threshold} S_t 
@@ -24,7 +25,7 @@ However, this problem has traditionally been broken down into two broad sub-prob
 \end{figure}
 
 
-The \emph{thresholding} step has traditionally been implemented as a simple $5\sigma$-thresholding, but other auxiliary approaches, such as pre-convolution with the PSF, may wrap around this stage to make it smart -- figure~\ref{fig:diagram}
+The \emph{thresholding} step has traditionally been implemented as a simple $5\sigma$-thresholding \citep{bailey2007find}, but other auxiliary approaches, such as pre-convolution with the PSF, may wrap around this stage to make it partially aware of spatial information content -- see \cite{DMTN-015}, figure~\ref{fig:diagram}
 
 
 \section{Learning-based Approaches}
@@ -33,23 +34,22 @@ The above process is prone to false positives (contamination) and false negative
 
 In the context built in the previous section, a learning based approach can be implemented in two broad ways:
 \begin{itemize}
-\item starting off $I_d$ -- a.k.a traditional real/bogus classification.
-\item starting off $(I_t,I_s)$ -- a.k.a end-to-end, TransiNet-style.
+\item starting off $I_d$ -- a.k.a traditional real/bogus classification \citep{bailey2007find}.
+\item starting off $(I_t,I_s)$ -- a.k.a end-to-end, TransiNet-style \citep{sedaghat2018effective}.
 \end{itemize}
-
-\footnote{The term 'detection' in the field of computer vision can be translated to localization+classification in the astrophysics' terminology}
 
 
 Each of the approaches has its own cons and pros, and methods based on both will be implemented for LSST. In this tech-note we focus on details of the former, the real/bogus classifier, and the end-to-end TransiNet will be covered in a future note.
 
 
 \section{Basic Real/Bogus Classifier}
+\label{sec:basic}
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=.6\textwidth]{material/rb-classifier}
   \includegraphics[width=.6\textwidth]{material/rb-classifier-mod}
-  \caption{Classical Real/bogus classifier (top) and the modified 3D classifier (bottom)}
+  \caption{Classical Real/bogus classifier (top, \cref{sec:basic}) and the modified 3D classifier (bottom,  \cref{sec:modified})}
   \label{fig:rbdiagram}
 \end{figure}
 
@@ -59,7 +59,16 @@ Input-output definition of the problem:
   \item output: reliability score for the potential transient
 \end{itemize}
 
-Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability or score.
+
+Regardless of how the score is calculated, the placement of the module in the pipeline makes it a score conditioned on the results of the upstream modules:
+\begin{equation}
+  \label{eq:conditional}
+  S_t =  Score(real | det)
+\end{equation}
+
+where \emph{det} is a flag representing whether a source is detected by the upstream modules or not, and is usually implemented as a $5\sigma$ thresholding of the output of the image differencing module -- see \cref{fig:diagram}. Note that since typical neural networks do not estimate probability distributions, we do not use a probabilistic notation in \cref{eq:conditional}.
+
+% Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability or score.
 
 \subsection{The score}
 As the task definition embraces a recognition according to spatial \emph{and} temporal features simultaneously, the score needs to be defined carefully to capture both aspects.
@@ -74,22 +83,30 @@ More specifically, we need to define the term ``real'' more precisely: a non-ast
 
 As illustrated in figure~\ref{fig:score-space}, the real-ness space is composed of (at least) two dimensions, which we name ``transient-ness'' and ``object-ness''.
 
-There are multiple available options:
-\begin{itemize}
-\item simple binary classification -- the resulting score may not be quite informative
-\item regression -- more difficult to define
-\item multi-class classification -- difficult data annotation
-\end{itemize}
+As a data-driven approach, which is being implemented as a supervised task at its core, we do not excert the definition of the problem into the method itself, but the ``truth labels'' used for training the classifier.
+\begin{tcolorbox}
+We label any suggested candidate as a \emph{positive}, if and only if it matches one of the astrophysical transients in the truth catalog, \emph{spatially} and with a high enough precision. Any other candidate is labeled as a \emph{negative}.
+\end{tcolorbox}
 
-If we go with regression... there are bogus detections, variables, ``appearing transients''
-\begin{equation}
-  s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
-\end{equation}
+This way, in the training phase we inject our prior knowledge about the ``real-ness'' of each object into the learning process, regardless of the difficulty of the detection of each object and without adding artificial Aleatoric uncertainty to the system. Later during the test phase (i.e. normal working mode of the pipeline), we use the pseudo-probabilities appearing before thresholding at the final layer of the network as a proxy of the score, which capture the Epistemic uncertainty of the model too.
+
+
+% There are multiple available options:
+% \begin{itemize}
+% \item simple binary classification -- the resulting score may not be quite informative
+% \item regression -- more difficult to define
+% \item multi-class classification -- difficult data annotation
+% \end{itemize}
+
+% If we go with regression... there are bogus detections, variables, ``appearing transients''
+% \begin{equation}
+%   s=\left| \frac{A_2-A_1}{A_2+A_1} \right|
+% \end{equation}
 
 
 \subsection{Drawbacks}
 \begin{itemize}
-\item has no access to the temporal~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!} behavior of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate.
+\item has no access to the temporal~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!} behavior of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate -- see \cref{sec:modified} for improvements in the modified version.
 \item any ``miss'' (false negative) in the upstream modules is inherited and irrecoverable.
 \item can only handle single object per cutout -- when there are multiple true transients, it \emph{has to} ignore the others.
 \end{itemize}
@@ -109,11 +126,13 @@ Although as discussed this is just a sub-optimal learning-based approach to this
 \subsection{What will be learned?}
 Since the temporal behavior of the candidates fed to this module is assumed, it is foreseeable that the neural network will eventually learn a concept close to ``PSF-ness'', true to its title; real/bogus classification.
 
-\subsection{Modified 3D Real/Bogus Classifier}
-In this implementation the classifier has access to the template, science image pairs along with the diff image. This allows the network to make use of the temporal behavior of the source too.
-Note however that still the difference image has a key role in the process, as the images are cropped around the sources detected in the difference image.
+\section{Modified 3D Real/Bogus Classifier}
+\label{sec:modified}
+In this implementation, we try to feed the network with a glimpse of the temporal behaviour of the candidate, by passing the template and science image pairs along with the diff image -- see \cite{duev2019real} for a similar implementation. This allows the network to make use of the temporal behavior of the source too.
+Note however that still the difference image plays a key role in the process, as the images are cropped around the sources detected in the difference image. This means that the modification only aims for cleanliness of the detections, by passing more information about the existing candidates (diaSources), but cannot affect the completeness of detections, by definition.
 
-\subsection{End-to-End Simultaneous Localization and Classification (~TransiNet)}
+\section{Future Work}
+\subsection{End-to-End Simultaneous Localization and Classification (TransiNet)}
 
 \begin{figure}[h]
   \centering
@@ -128,7 +147,7 @@ Note however that still the difference image has a key role in the process, as t
   \item intermediate output: a ``score image'' where scores are assigned per-pixel
 \end{itemize}
 
-Based on TransiNet~\cite{transinet}. Does full detection (localization + classification) simultaneously -- along with any necessary implicit steps.
+Based on TransiNet~\citep{sedaghat2018effective}. Does full detection (localization + classification) simultaneously -- along with any necessary implicit steps.
 Since the temporal and spatial behaviors are considered at the same time, the definition of the task of this module would be to find all the time-variable real astronomical sources -- corresponding to the high-level definition of the problem in \ref{sec:definition}.
 
 
