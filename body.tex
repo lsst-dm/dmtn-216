@@ -60,7 +60,16 @@ Input-output definition of the problem:
   \item output: reliability score for the potential transient
 \end{itemize}
 
-Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability or score.
+
+Regardless of how the score is calculated, the placement of the module in the pipeline makes it a score conditioned on the results of the upstream modules:
+\begin{equation}
+  \label{eq:conditional}
+  S_t =  Score(real | det)
+\end{equation}
+
+where \emph{det} is a flag representing whether a source is detected by the upstream modules or not, and is usually implemented as a $5\sigma$ thresholding of the output of the image differencing module -- see \cref{fig:diagram}. Note that since typical neural networks do not estimate probability distributions, we do not use a probabilistic notation in \cref{eq:conditional}.
+
+% Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability or score.
 
 \subsection{The score}
 As the task definition embraces a recognition according to spatial \emph{and} temporal features simultaneously, the score needs to be defined carefully to capture both aspects.
