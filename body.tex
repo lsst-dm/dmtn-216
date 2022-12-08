@@ -71,7 +71,8 @@ where \emph{det} is a flag representing whether a source is detected by the upst
 % Although the output of a classifier is categorical (i.e. a class label), we will be using the output before the last Softmax~\footnote{TBD} layer, which can be interpreted as a probability or score.
 
 \subsection{The score}
-As the task definition embraces a recognition according to spatial \emph{and} temporal features simultaneously, the score needs to be defined carefully to capture both aspects.
+As the task definition embraces a recognition according to spatial \emph{and} temporal ~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!}
+features simultaneously, the score needs to be defined carefully to capture both aspects.
 More specifically, we need to define the term ``real'' more precisely: a non-astrophysical detection, such as an artifact, is obviously not ``real''. But how about a non-varying astrophysical source?
 
 \begin{figure}[h]
@@ -106,12 +107,12 @@ This way, in the training phase we inject our prior knowledge about the ``real-n
 
 \subsection{Drawbacks}
 \begin{itemize}
-\item has no access to the temporal~\footnote{throughout this document the term ``temporal'' is used to represent the transition from a template/reference image to a science image. It has to do, but should not be confused with the ``real'' time axis!} behavior of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate -- see \cref{sec:modified} for improvements in the modified version.
-\item any ``miss'' (false negative) in the upstream modules is inherited and irrecoverable.
-\item can only handle single object per cutout -- when there are multiple true transients, it \emph{has to} ignore the others.
+\item Any ``miss'' (false negative) in the upstream modules is inherited and irrecoverable.
+\item Can only handle single object per cutout -- when there are multiple true transients, it \emph{has to} ignore the others.
+%\item In its most classical implementation, it has no direct access to the transitional behavior of the source. This is by definition outsourced to the upstream image differencing module and hence there is no ``learned intelligence'' in processing the ``transient-ness'' of the candidate -- see \cref{sec:modified} for improvements in the modified version.
 \end{itemize}
 
-The first two drawbacks are a result of having separated the temporal processing (i.e. image differencing) from the final classification, whereas the last one has to do with how the problem and solution are defined based on cutouts.
+The former is a result of having separated the temporal processing (i.e. image differencing) from the final classification, whereas the latter has to do with how the problem and solution are defined based on cutouts.
 
 % \paragraph{The case of ambiguous negatives}
 % As of now it is not quite clear what a ``negative'' is for training; in the broadest implementation it can be cutout that is not positive. But since the inputs to this module are the outputs of imdiff, one could only use ``bogus candidates'' as negatives, which is closer to what happens in practice, and may give better results.
